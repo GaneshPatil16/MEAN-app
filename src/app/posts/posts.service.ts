@@ -28,7 +28,7 @@ private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
           title: post.title,
           content: post.content,
           id: post._id,
-          imagePath: post.imagePath,
+          // imagePath: post.imagePath,
           creator: post.creator
         }
       }),
@@ -51,15 +51,16 @@ private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
       _id: string,
       title: string,
       content: string,
-      imagePath: string,
+      // imagePath: string,
       creator: string}>(BACKEND_URL + id);
   }
 
-  addPost(title: string, content: string, image: File) {
-    const postData = new FormData();
-    postData.append('title', title);
-    postData.append('content', content);
-    postData.append('image', image, title); // title is the name of file to be saved in DB
+  addPost(title: string, content: string) {
+    const postData = {
+      title: title,
+      content: content
+    };
+    // postData.append('image', image, title); // title is the name of file to be saved in DB
     this.http.post<{message: string, post: Post}>(BACKEND_URL, postData)
     .subscribe((responseData) => {
       this.router.navigate(['/']);
@@ -68,23 +69,62 @@ private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
     });
   }
 
-  updatePost(id: string, title: string, content: string, image: string | File) {
-    let postData:Post | FormData;
-    if (typeof(image) === 'object') {
-      postData = new FormData();
-      postData.append('id', id);
-      postData.append('title', title);
-      postData.append('content', content);
-      postData.append('image', image, title);
-    } else {
+  // addPost(title: string, content: string, image: File) {
+  //   const postData = new FormData();
+  //   postData.append('title', title);
+  //   postData.append('content', content);
+  //   // postData.append('image', image, title); // title is the name of file to be saved in DB
+  //   this.http.post<{message: string, post: Post}>(BACKEND_URL, postData)
+  //   .subscribe((responseData) => {
+  //     this.router.navigate(['/']);
+  //   }, error => {
+  //     this.router.navigate(['/']);
+  //   });
+  // }
+
+  // updatePost(id: string, title: string, content: string, image: string | File) {
+  //   let postData:Post | FormData;
+  //   if (typeof(image) === 'object') {
+  //     postData = new FormData();
+  //     postData.append('id', id);
+  //     postData.append('title', title);
+  //     postData.append('content', content);
+  //     postData.append('image', image, title);
+  //   } else {
+  //     postData = {
+  //       id: id,
+  //       title: title,
+  //       content: content,
+  //       imagePath: image,
+  //       creator: null
+  //     };
+  //   }
+
+  //   this.http.put(BACKEND_URL + id, postData).subscribe(response => {
+  //     console.log(response);
+  //     this.router.navigate(['/']);
+  //   }, error => {
+  //     this.router.navigate(['/']);
+  //   })
+  // }
+
+  updatePost(id: string, title: string, content: string) {
+    let postData: Post;
+    // if (typeof(image) === 'object') {
+    //   postData = new FormData();
+    //   postData.append('id', id);
+    //   postData.append('title', title);
+    //   postData.append('content', content);
+    //   postData.append('image', image, title);
+    // } else {
       postData = {
         id: id,
         title: title,
         content: content,
-        imagePath: image,
+        // imagePath: image,
         creator: null
       };
-    }
+    // }
 
     this.http.put(BACKEND_URL + id, postData).subscribe(response => {
       console.log(response);

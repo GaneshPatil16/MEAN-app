@@ -37,8 +37,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
     this.form = new FormGroup({
       title: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]}),
-      content: new FormControl(null, {validators: [Validators.required]}),
-      image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
+      content: new FormControl(null, {validators: [Validators.required]})
+      // image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
     });
     this.route.paramMap.subscribe((paramMap) => {
       if (paramMap.has('postId')) {
@@ -49,13 +49,13 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             id: postData._id,
             title: postData.title,
             content: postData.content,
-            imagePath: postData.imagePath,
+            // imagePath: postData.imagePath,
             creator: postData.creator
           }
           this.form.setValue({
             title: this.post.title,
-            content: this.post.content,
-            image: this.post.imagePath
+            content: this.post.content
+            // image: this.post.imagePath
           })
         });
       } else {
@@ -65,16 +65,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  onImagePicked (event) {
-    const file = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({image: file});
-    this.form.get('image').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    }
-    reader.readAsDataURL(file);
-  }
+  // onImagePicked (event) {
+  //   const file = (event.target as HTMLInputElement).files[0];
+  //   this.form.patchValue({image: file});
+  //   this.form.get('image').updateValueAndValidity();
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.imagePreview = reader.result as string;
+  //   }
+  //   reader.readAsDataURL(file);
+  // }
 
   onSavePost() {
     if (this.form.invalid) {
@@ -84,14 +84,14 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     if (this.mode === 'create') {
       this.postsService.addPost(
         this.form.value.title,
-        this.form.value.content,
-        this.form.value.image);
+        this.form.value.content)
+        // this.form.value.image);
     } else {
       this.postsService.updatePost(
         this.postId,
         this.form.value.title,
-        this.form.value.content,
-        this.form.value.image);
+        this.form.value.content);
+        // this.form.value.image);
     }
     this.form.reset();
   }
